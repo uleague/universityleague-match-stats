@@ -1,0 +1,5 @@
+pymongo
+dota2
+gevent
+requests==2.21.0
+steam
