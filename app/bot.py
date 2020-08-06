@@ -1,7 +1,9 @@
-import logging
+"""
+This module contains Steam bot.
+"""
+
 import gevent
-from binascii import hexlify
-import vdf
+from typing import Iterable
 
 from steam.client import SteamClient
 from steam.core.msg import MsgProto
@@ -17,7 +19,7 @@ from rich.logging import RichHandler
 
 FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 logging.basicConfig(
-    level="INFO", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()]
+    level="DEBUG", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()]
 )
 
 LOG = logging.getLogger(__name__)
@@ -41,6 +43,10 @@ class MatchStatsBot(object):
         Steam client from steam lib
     dota: Dota2Client
         Dota client from dota lib
+    
+    Methods:
+    ----------
+
 
     """
 
@@ -94,12 +100,42 @@ class MatchStatsBot(object):
             LOG.info("Reconnect in %ds...", delay)
 
     def prompt_login(self):
+        """
+        Logins to steam
+        """
         self.steam.cli_login(self.username, self.password)
 
     def close(self):
+        """
+        Closes bot
+        """
         if self.steam.logged_on:
             self.logged_on_once = False
             LOG.info("Logout")
             self.steam.logout()
         if self.steam.connected:
             self.steam.disconnect()
+
+    def get_tournament_matches(self, league_id: int = 12245) -> MsgProto:
+        """
+        Gets league matches.
+
+        :param league_id: int
+        :return: matches 
+        :rtype: MsgProto
+
+        TODO: Seems that proto has changed. Investigating...
+        https://github.com/SteamDatabase/Protobufs/tree/master/dota2
+        """
+        job = self.dota.request_matches(league_id=league_id, matches_requested=50)
+        tournament_matches: Iterable = self.dota.wait_msg(job, timeout=10)
+        LOG.info(tournament_matches)
+        return tournament_matches
+
+    def get_match_by_start_time(self, start_time: int) -> MsgProto:
+        """
+        Find match by start_time in get_tournament_matches
+
+        :param start_time: int
+        """
+        return

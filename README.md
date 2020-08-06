@@ -27,7 +27,8 @@ POST /match
 ```
 ```bash
 Payload {
-    "start_time": int
+    "start_time": int,
+    "league_id"
 }
 ```
 Returns json with stats of the match.
