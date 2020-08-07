@@ -1,4 +1,7 @@
 """
+!!!DEPRECATED!!! 
+PREVIOUS SOLUTION FOR HISTORY PURPOSES
+
 This script gets dota match stats by its start time.
 Input - start time (unix).
 Algorithm:

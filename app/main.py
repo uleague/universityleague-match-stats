@@ -5,10 +5,7 @@ gevent.monkey.patch_all()
 from gevent.pywsgi import WSGIServer
 import gevent
 
-from api import app
-from bot import MatchStatsBot
-
-worker = MatchStatsBot()
+from api import app, worker
 
 http_server = WSGIServer(("0.0.0.0", 8080), app)
 

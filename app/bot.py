@@ -3,7 +3,8 @@ This module contains Steam bot.
 """
 
 import gevent
-from typing import Iterable
+from typing import Iterable, Any, Dict, Tuple
+from queue import Queue
 
 from steam.client import SteamClient
 from steam.core.msg import MsgProto
@@ -13,13 +14,14 @@ from steam.utils.proto import proto_to_dict
 from dota2.client import Dota2Client
 
 from settings import SteamConfig
+from exceptions import BotError
 
 import logging
 from rich.logging import RichHandler
 
 FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 logging.basicConfig(
-    level="DEBUG", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()]
+    level="INFO", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()]
 )
 
 LOG = logging.getLogger(__name__)
@@ -39,13 +41,31 @@ class MatchStatsBot(object):
         Steam password
     logged_on_once: bool
         From https://github.com/ValvePython/steam/blob/master/recipes/2.SimpleWebAPI/steam_worker.py
-    steam: SteamClient
+    steam: :class:`SteamClient`
         Steam client from steam lib
-    dota: Dota2Client
+    dota: :class:`Dota2Client`
         Dota client from dota lib
+    q: :class:`Queue`
+        Queue to manage communication from callback to api
+
+        .. note::
+            Messages to the Queue are sent in the form of Tuple.
+
+            :Example:
+
+            >>> q.put("name_of_callback", callback_result)
     
     Methods:
     ----------
+    __init__(self)
+        Basically here the bot is launched and main events are registered.
+    
+    Main events:
+        - client.on('logged_on')
+            Steam Client is set up. Now we launch dota client.
+        - dota.on('get_tournament_matches')
+            Event wich is fired up by self.get_tournament_matches(). 
+            Which itself is fired by api.
 
 
     """
@@ -53,6 +73,7 @@ class MatchStatsBot(object):
     def __init__(self):
         self.username = SteamConfig.STEAM_LOGIN
         self.password = SteamConfig.STEAM_PASSWORD
+        self.q = Queue()  # To contain results from callbacks
 
         self.logged_on_once = False
 
@@ -84,8 +105,8 @@ class MatchStatsBot(object):
             LOG.info("Last logon: %s", client.user.last_logon)
             LOG.info("Last logoff: %s", client.user.last_logoff)
             LOG.info("-" * 30)
-            # Launch dota when logged in to Steam
-            dota.launch()
+
+            dota.launch()  # Launch dota
 
         @client.on("disconnected")
         def handle_disconnect():
@@ -98,6 +119,64 @@ class MatchStatsBot(object):
         @client.on("reconnect")
         def handle_reconnect(delay):
             LOG.info("Reconnect in %ds...", delay)
+
+        @dota.on("ready")
+        def ready():
+            LOG.info("Dota is ready")
+
+        @dota.on("get_tournament_matches")
+        def handle_get_tournament_matches(league_id) -> Tuple:
+            """
+            Fires after api calls `worker.get_tournament_matches()`
+
+            Puts result to the queue as a Tuple. 
+            raises BotError if couldn't get tournament matches.
+            """
+            LOG.info("Caught a get_tournament_matches event")
+            try:
+                job = dota.request_matches(
+                    league_id=league_id, matches_requested=3
+                )  # 25 is max
+                tournament_matches: Iterable = dota.wait_msg(job, timeout=10)
+            except Exception:
+                LOG.exception()
+                raise
+            # check if result exists
+            if tournament_matches:
+                LOG.info("Putting matches in queue")
+                # Put result with identificator to Queue
+                self.q.put(("tournament_matches", tournament_matches))
+            else:
+                LOG.exception()
+                raise BotError(
+                    "Could not find matches in tournament: {}".format(league_id)
+                )
+
+        @dota.on("get_detailed_match")
+        def handle_get_detailed_match(match_id) -> Tuple:
+            """
+            Fires after api calls `worker.get_detailed_match()`
+
+            Puts result to the queue as a Tuple. 
+            raises BotError if couldn't get match.
+            """
+            LOG.info("Caught a get_detailed_match event")
+            try:
+                job = dota.request_match_details(match_id)
+                match: Iterable = dota.wait_msg(job, timeout=10)
+            except Exception:
+                LOG.exception()
+                raise
+            # check if result exists
+            if match:
+                LOG.info("Putting matches in queue")
+                # Put result with identificator to Queue
+                self.q.put(("detailed_match", match))
+            else:
+                LOG.exception()
+                raise BotError(
+                    "Could not find matches in tournament: {}".format(match_id)
+                )
 
     def prompt_login(self):
         """
@@ -116,21 +195,47 @@ class MatchStatsBot(object):
         if self.steam.connected:
             self.steam.disconnect()
 
-    def get_tournament_matches(self, league_id: int = 12245) -> MsgProto:
+    def get_tournament_matches(self, league_id: int) -> Dict:
         """
         Gets league matches.
 
         :param league_id: int
         :return: matches 
-        :rtype: MsgProto
-
-        TODO: Seems that proto has changed. Investigating...
-        https://github.com/SteamDatabase/Protobufs/tree/master/dota2
+        :rtype: Dict
         """
-        job = self.dota.request_matches(league_id=league_id, matches_requested=50)
-        tournament_matches: Iterable = self.dota.wait_msg(job, timeout=10)
-        LOG.info(tournament_matches)
-        return tournament_matches
+        # Emiting event
+        self.dota.emit("get_tournament_matches", league_id)
+        while True:  # Listen for queue
+            item = self.q.get()
+            if item[0] == "tournament_matches":  # Filter queue messages for desired one
+                LOG.info("Working on tournament matches")
+                matches = item[1]
+                # Convert Proto to Dict
+                res_matches: Dict = proto_to_dict(matches)
+                self.q.task_done()
+                LOG.info("Task is done: '{}'".format(item[0]))
+                return res_matches
+
+    def get_detailed_match(self, match_id: int) -> Dict:
+        """
+        Gets detailed match stats.
+
+        :param match_id: int
+        :return: detailed match 
+        :rtype: Dict
+        """
+        # Emiting event
+        self.dota.emit("get_detailed_match", match_id)
+        while True:  # Listen for queue
+            item = self.q.get()
+            if item[0] == "detailed_match":  # Filter queue messages for desired one
+                LOG.info("Working on detailed match")
+                match = item[1]
+                # Convert Proto to Dict
+                res_match: Dict = proto_to_dict(match)
+                self.q.task_done()
+                LOG.info("Task is done: '{}'".format(item[0]))
+                return res_match
 
     def get_match_by_start_time(self, start_time: int) -> MsgProto:
         """

@@ -28,10 +28,10 @@ POST /match
 ```bash
 Payload {
     "start_time": int,
-    "league_id"
+    "league_id": int
 }
 ```
-Returns json with stats of the match.
+Returns json with detailed stats of the match.
 
 
 ## API reference

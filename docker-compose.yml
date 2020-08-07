@@ -1,6 +1,6 @@
 version: "3.8"
 services: 
-    korzh_bot:
+    match_stats_bot:
         container_name: "dota_bot"
         build:
             context: .
