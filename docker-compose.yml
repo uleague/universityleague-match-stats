@@ -4,7 +4,7 @@ services:
         container_name: "dota_bot"
         build:
             context: .
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.dev
         env_file: app/.env
         ports: 
             - 8080:8080
