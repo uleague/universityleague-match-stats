@@ -14,3 +14,11 @@ class SteamConfig:
 
     STEAM_LOGIN = os.getenv("STEAM_LOGIN")
     STEAM_PASSWORD = os.getenv("STEAM_PASSWORD")
+
+
+class Config:
+    """
+    Class for General config
+    """
+
+    PORT = os.getenv("PORT", 8080)
