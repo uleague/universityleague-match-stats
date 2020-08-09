@@ -1,4 +1,4 @@
-name: Steam Bot
+name: Match Stats Bot
 
 on:
   push:
