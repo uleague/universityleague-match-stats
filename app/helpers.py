@@ -8,7 +8,7 @@ from exceptions import TournamentError
 
 
 @dataclass
-class Player(TypedDict):
+class MatchPlayer(TypedDict):
     account_id: int
     active_plus_subscription: bool
     hero_id: int
@@ -33,7 +33,7 @@ class Match(TypedDict):
     match_id: int
     match_outcome: int
     negative_votes: int
-    players: List[Dict["str", Union[Player, str, int, List]]]
+    players: List[Dict["str", Union[MatchPlayer, str, int, List]]]
     positive_votes: int
     radiant_team_complete: int
     radiant_team_id: int
