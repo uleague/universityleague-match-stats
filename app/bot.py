@@ -26,6 +26,8 @@ logging.basicConfig(
 
 LOG = logging.getLogger(__name__)
 
+import time
+
 
 class MatchStatsBot(object):
     """
@@ -135,22 +137,23 @@ class MatchStatsBot(object):
             LOG.info("Caught a get_tournament_matches event")
             try:
                 job = dota.request_matches(
-                    league_id=league_id, matches_requested=3
+                    league_id=league_id, matches_requested=25
                 )  # 25 is max
                 tournament_matches: Iterable = dota.wait_msg(job, timeout=10)
             except Exception:
                 LOG.exception()
                 raise
-            # check if result exists
-            if tournament_matches:
-                LOG.info("Putting matches in queue")
-                # Put result with identificator to Queue
-                self.q.put(("tournament_matches", tournament_matches))
             else:
-                LOG.exception()
-                raise BotError(
-                    "Could not find matches in tournament: {}".format(league_id)
-                )
+                # check if result exists
+                if tournament_matches:
+                    LOG.info("Putting matches in queue")
+                    # Put result with identificator to Queue
+                    self.q.put(("tournament_matches", tournament_matches))
+                else:
+                    LOG.exception()
+                    raise BotError(
+                        "Could not find matches in tournament: {}".format(league_id)
+                    )
 
         @dota.on("get_detailed_match")
         def handle_get_detailed_match(match_id) -> Tuple:
@@ -168,21 +171,123 @@ class MatchStatsBot(object):
                 LOG.exception()
                 raise
             # check if result exists
-            if match:
-                LOG.info("Putting matches in queue")
-                # Put result with identificator to Queue
-                self.q.put(("detailed_match", match))
             else:
+                if match:
+                    LOG.info("Putting matches in queue")
+                    # Put result with identificator to Queue
+                    self.q.put(("detailed_match", match))
+                else:
+                    LOG.exception()
+                    raise BotError(
+                        "Could not find matches in tournament: {}".format(match_id)
+                    )
+
+        @dota.on("get_profile_card")
+        def handle_get_profile_card(steam_id: int) -> Tuple:
+            """
+            Fires after api calls `worker.get_profile_card()`
+
+            Puts result to the queue as a Tuple. 
+            raises BotError if couldn't get profile.
+            """
+            LOG.info("Caught a get_profile_stats event")
+            try:
+                # Profile card for medal
+                job = dota.request_profile_card(steam_id)
+                profile_card: Iterable = dota.wait_msg(job, timeout=10)
+            except Exception:
                 LOG.exception()
-                raise BotError(
-                    "Could not find matches in tournament: {}".format(match_id)
-                )
+                raise
+            else:
+                # check if result exists
+                if profile_card:
+                    LOG.info("Putting profile card in queue")
+                    # Put result with identificator to Queue
+                    self.q.put(("profile_card", profile_card))
+                else:
+                    LOG.exception()
+                    raise BotError("Could not find profile: {}".format(steam_id))
+
+        @dota.on("get_profile_stats")
+        def handle_get_profile_stats(steam_id: int) -> Tuple:
+            """
+            Fires after api calls `worker.get_profile_stats()`
+
+            Puts result to the queue as a Tuple. 
+            raises BotError if couldn't get profile.
+            """
+            LOG.info("Caught a get_profile_stats event")
+            try:
+                # Profile stats for in game stats
+                job = dota.request_player_stats(steam_id)
+                profile_stats: Iterable = dota.wait_msg(job, timeout=10)
+            except Exception:
+                LOG.exception()
+                raise
+            else:
+                # check if result exists
+                if profile_stats:
+                    LOG.info("Putting profile card in queue")
+                    # Put result with identificator to Queue
+                    self.q.put(("profile_stats", profile_stats))
+                else:
+                    LOG.exception()
+                    raise BotError("Could not find profile: {}".format(steam_id))
+
+        @dota.on("get_profile_general")
+        def handle_get_profile_general(steam_id: int) -> Tuple:
+            """
+            Fires after api calls `worker.get_profile_general()`
+
+            Puts result to the queue as a Tuple. 
+            raises BotError if couldn't get profile.
+            """
+            LOG.info("Caught a get_profile_general event")
+            try:
+                # Profile stats for heroes
+                job = dota.request_profile(steam_id)
+                profile_general: Iterable = dota.wait_msg(job, timeout=10)
+            except Exception:
+                LOG.exception()
+                raise
+            else:
+                # check if result exists
+                if profile_general:
+                    LOG.info("Putting profile card in queue")
+                    # Put result with identificator to Queue
+                    self.q.put(("profile_general", profile_general))
+                else:
+                    LOG.exception()
+                    raise BotError("Could not find profile: {}".format(steam_id))
 
     def prompt_login(self):
         """
         Logins to steam
         """
         self.steam.cli_login(self.username, self.password)
+
+    def handle_task(self, task) -> Dict:
+        """
+        Basically converts task :class: Tuple to :class: Dict
+        """
+        item = task[1]
+        result: Dict = proto_to_dict(item)
+        self.q.task_done()
+        LOG.info("Task is done: '{}'".format(task[0]))
+        return result
+
+    def get_result_from_queue(self, event) -> Dict:
+        """
+        Get result from queue by event name
+        :return: converted Proto to dict
+        :rtype: Dict
+        """
+        task = self.q.get()
+        LOG.info("New task {}".format(task[0]))
+        if task[0] == event:  # filtering for desired event
+            LOG.info("Working on {}".format(event))
+            result = self.handle_task(task)
+            return result
 
     def close(self):
         """
@@ -203,18 +308,19 @@ class MatchStatsBot(object):
         :return: matches 
         :rtype: Dict
         """
+        # timeout variable can be omitted
+        timeout = time.time() + 60 * 5  # [seconds]
+
         # Emiting event
         self.dota.emit("get_tournament_matches", league_id)
-        while True:  # Listen for queue
-            item = self.q.get()
-            if item[0] == "tournament_matches":  # Filter queue messages for desired one
-                LOG.info("Working on tournament matches")
-                matches = item[1]
-                # Convert Proto to Dict
-                res_matches: Dict = proto_to_dict(matches)
-                self.q.task_done()
-                LOG.info("Task is done: '{}'".format(item[0]))
-                return res_matches
+        while True:
+            time.sleep(0.25)  # short sleep here so this loop is not hogging CPU
+            if time.time() > timeout:
+                raise BotError(
+                    "Timeout. Could not wait for results from Dota for tournament matches"
+                )
+            matches = self.get_result_from_queue("tournament_matches")
+            return matches
 
     def get_detailed_match(self, match_id: int) -> Dict:
         """
@@ -224,23 +330,75 @@ class MatchStatsBot(object):
         :return: detailed match 
         :rtype: Dict
         """
+        # timeout variable can be omitted
+        timeout = time.time() + 60 * 5  # [seconds]
         # Emiting event
         self.dota.emit("get_detailed_match", match_id)
-        while True:  # Listen for queue
-            item = self.q.get()
-            if item[0] == "detailed_match":  # Filter queue messages for desired one
-                LOG.info("Working on detailed match")
-                match = item[1]
-                # Convert Proto to Dict
-                res_match: Dict = proto_to_dict(match)
-                self.q.task_done()
-                LOG.info("Task is done: '{}'".format(item[0]))
-                return res_match
+        while True:
+            time.sleep(0.25)  # short sleep here so this loop is not hogging CPU
+            if time.time() > timeout:
+                raise BotError(
+                    "Timeout. Could not wait for results from Dota for detailed match"
+                )
+            match = self.get_result_from_queue("detailed_match")
+            return match
 
-    def get_match_by_start_time(self, start_time: int) -> MsgProto:
+    def get_profile_card(self, steam_id: int) -> Dict:
         """
-        Find match by start_time in get_tournament_matches
+        Find profile card by steam id. Mainly for medal check.
 
-        :param start_time: int
+        :param steam_id: int
+        :return: profile card
+        :rtype: Dict
         """
-        return
+        # timeout variable can be omitted
+        timeout = time.time() + 60 * 5  # [seconds]
+        self.dota.emit("get_profile_card", steam_id)
+        while True:
+            time.sleep(0.25)  # short sleep here so this loop is not hogging CPU
+            if time.time() > timeout:
+                raise BotError(
+                    "Timeout. Could not wait for results from Dota for profile card"
+                )
+            profile_card = self.get_result_from_queue("profile_card")
+            return profile_card
+
+    def get_profile_stats(self, steam_id: int) -> Dict:
+        """
+        Find profile card by steam id. Mainly for in game stats (lasthits, rampages).
+
+        :param steam_id: int
+        :return: profile card
+        :rtype: Dict
+        """
+        # timeout variable can be omitted
+        timeout = time.time() + 60 * 5  # [seconds]
+        self.dota.emit("get_profile_stats", steam_id)
+        while True:
+            time.sleep(0.25)  # short sleep here so this loop is not hogging CPU
+            if time.time() > timeout:
+                raise BotError(
+                    "Timeout. Could not wait for results from Dota for profile stats"
+                )
+            profile_stats = self.get_result_from_queue("profile_stats")
+            return profile_stats
+
+    def get_profile_general(self, steam_id: int) -> Dict:
+        """
+        Find general profile info by steam id. Mainly for best heroes info.
+
+        :param steam_id: int
+        :return: general profile
+        :rtype: Dict
+        """
+        # timeout variable can be omitted
+        timeout = time.time() + 60 * 5  # [seconds]
+        self.dota.emit("get_profile_general", steam_id)
+        while True:
+            time.sleep(0.25)  # short sleep here so this loop is not hogging CPU
+            if time.time() > timeout:
+                raise BotError(
+                    "Timeout. Could not wait for results from Dota for profile general"
+                )
+            profile_general = self.get_result_from_queue("profile_general")
+            return profile_general
