@@ -29,7 +29,8 @@ Returns last 25 matches for the tournament.
 
 <details>
 <summary>Example Response</summary>
-```
+
+```json
 {
     "request_id": 0,
     "results_remaining": 25,
@@ -287,7 +288,8 @@ Returns json with detailed stats of the match.
 
 <details>
 <summary>Example Response</summary>
-```
+
+```json
 {
     "match": {
         "barracks_status": [
@@ -803,7 +805,8 @@ GET /profiles/<int:steam32_id>/stats
 
 <details>
 <summary>Example Response</summary>
-```
+
+```json
 {
     "account_id": 71935067,
     "aegises_snatched": 1,
@@ -839,7 +842,8 @@ GET /profiles/<int:steam32_id>/successful_heroes
 
 <details>
 <summary>Example Response</summary>
-```
+
+```json
 [
     {
         "hero_id": 41,
@@ -868,7 +872,8 @@ GET /profiles/<int:steam32_id>/card
 
 <details>
 <summary>Example Response</summary>
-```
+
+```json
 {
     "account_id": 71935067,
     "background_def_index": 0,
