@@ -891,7 +891,7 @@ GET /profiles/<int:steam32_id>/card
 Also important to note that Response contains field rank_tier_mmr_type which should
 be converted to "medal". Please consider converting by following logic.
 
-```
+```javascript
 const RANK_TO_MEDAL = {
   80: 'Immortal',
   70: 'Divine',
