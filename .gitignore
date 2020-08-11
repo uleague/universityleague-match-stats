@@ -2,3 +2,7 @@ __pycache__
 sentry/
 .env
 venv/
+.github/
+.pytest_cache
+.chart-match-stats
+.coverage

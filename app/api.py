@@ -7,8 +7,8 @@ from dacite import from_dict
 from flask import Flask, request, abort, jsonify, make_response
 from typing import Dict
 
-from bot import MatchStatsBot
-from helpers import Tournament
+from .bot import MatchStatsBot
+from .types import Tournament
 
 import logging
 from rich.logging import RichHandler
@@ -26,7 +26,7 @@ worker = MatchStatsBot()
 
 @app.route("/", methods=["GET"])
 def say_hello():
-    return make_response(jsonify({"Hello": worker.username}, 200))
+    return make_response(jsonify({"Hello": worker.username}), 200)
 
 
 @app.route("/tournaments/<int:league_id>/matches", methods=["GET"])

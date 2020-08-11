@@ -6,12 +6,12 @@ COPY ./app/requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ./app/ .
+COPY ./app/ ./app/
 
 RUN mkdir -p sentry
 
 ENV PORT=80
 EXPOSE 80
 
-CMD ["python", "main.py"]
+CMD ["python", "-m", "app/"]
 

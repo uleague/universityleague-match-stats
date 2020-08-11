@@ -6,9 +6,9 @@ COPY ./app/requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ./app/ .
+COPY ./app/ ./app/
 
 RUN mkdir -p sentry
 
-CMD ["python", "main.py"]
+CMD ["python", "-m", "app/"]
 

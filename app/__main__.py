@@ -2,11 +2,15 @@ import gevent.monkey
 
 gevent.monkey.patch_all()
 
+import sys
+
+sys.path.append("/app/")
+
 from gevent.pywsgi import WSGIServer
 import gevent
 
-from api import app, worker
-from settings import Config
+from .api import app, worker
+from .settings import Config
 
 http_server = WSGIServer(("0.0.0.0", int(Config.PORT)), app)
 

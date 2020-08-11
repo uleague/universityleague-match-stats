@@ -4,7 +4,8 @@ This module is mainly for dataclasses.
 
 from dataclasses import dataclass
 from typing import List, Sequence, TypedDict, Dict, Union
-from exceptions import TournamentError
+
+from .exceptions import TournamentError
 
 
 @dataclass

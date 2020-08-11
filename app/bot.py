@@ -13,8 +13,8 @@ from steam.utils.proto import proto_to_dict
 
 from dota2.client import Dota2Client
 
-from settings import SteamConfig
-from exceptions import BotError
+from .settings import SteamConfig
+from .exceptions import BotError
 
 import logging
 from rich.logging import RichHandler
