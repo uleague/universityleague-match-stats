@@ -3,6 +3,5 @@ sentry/
 .env
 venv/
 .pytest_cache
-.chart-match-stats
 .coverage
 .vscode/
