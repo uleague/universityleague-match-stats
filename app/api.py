@@ -28,6 +28,10 @@ worker = steam_bot
 def say_hello():
     if worker.username:
         return make_response(jsonify({"Hello": worker.username}), 200)
+    else:
+        return make_response(
+            jsonify({"Error": "Could not get Bot username. Check if it is online"}), 500
+        )
 
 
 @bp.route("/tournaments/<int:league_id>/matches", methods=["GET"])
