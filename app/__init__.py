@@ -1,6 +1,6 @@
-from .api import app
 from .bot import MatchStatsBot
 
 __author__ = "ULeague"
+__version__ = "0.1.0"
 
-__all__ = ["app", "MatchStatsBot"]
+steam_bot = MatchStatsBot()

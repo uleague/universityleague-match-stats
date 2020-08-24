@@ -1,0 +1,20 @@
+{
+    "successful_heroes":
+        [
+            {
+                "hero_id": 41,
+                "longest_streak": 4,
+                "win_percent": 0.7333333492279053
+            },
+            {
+                "hero_id": 85,
+                "longest_streak": 6,
+                "win_percent": 0.7241379022598267
+            },
+            {
+                "hero_id": 48,
+                "longest_streak": 1,
+                "win_percent": 0.7037037014961243
+            }
+        ]
+}

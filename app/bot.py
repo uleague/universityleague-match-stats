@@ -82,7 +82,7 @@ class MatchStatsBot(object):
         self.steam = client = SteamClient()
         self.dota = dota = Dota2Client(client)
 
-        client.set_credential_location("./sentry")
+        client.set_credential_location("app/sentry")
 
         @client.on("error")
         def handle_error(result):

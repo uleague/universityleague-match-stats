@@ -5,7 +5,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile.dev
-        env_file: app/.env
+        env_file: .env
         ports: 
             - 8080:8080
         entrypoint: ['python', '-m', 'app']

@@ -2,7 +2,7 @@ FROM python:3.8-slim
 
 WORKDIR /usr/src/app
 
-COPY ./app/requirements.txt ./
+COPY requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -13,5 +13,5 @@ RUN mkdir -p sentry
 ENV PORT=80
 EXPOSE 80
 
-CMD ["python", "-m", "app/"]
+CMD ["python", "-m", "app"]
 
