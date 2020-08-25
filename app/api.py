@@ -4,11 +4,11 @@ This module contains flask app and its routes.
 
 from getpass import getpass
 from dacite import from_dict
-from flask import Flask, request, abort, jsonify, make_response
+from flask import Flask, request, abort, jsonify, make_response, Blueprint
 from typing import Dict
 
-from bot import MatchStatsBot
-from helpers import Tournament
+from . import steam_bot
+from .types import Tournament
 
 import logging
 from rich.logging import RichHandler
@@ -20,16 +20,21 @@ logging.basicConfig(
 
 LOG = logging.getLogger(__name__)
 
-app = Flask("api")
-worker = MatchStatsBot()
+bp = Blueprint("app", __name__)
+worker = steam_bot
 
 
-@app.route("/", methods=["GET"])
+@bp.route("/", methods=["GET"])
 def say_hello():
-    return make_response(jsonify({"Hello": worker.username}, 200))
+    if worker.username:
+        return make_response(jsonify({"Hello": worker.username}), 200)
+    else:
+        return make_response(
+            jsonify({"Error": "Could not get Bot username. Check if it is online"}), 500
+        )
 
 
-@app.route("/tournaments/<int:league_id>/matches", methods=["GET"])
+@bp.route("/tournaments/<int:league_id>/matches", methods=["GET"])
 def tournament_matches(league_id: int):
     """
     Gets 25 last Series from tournament.
@@ -47,7 +52,7 @@ def tournament_matches(league_id: int):
         return make_response(jsonify(matches), 200)
 
 
-@app.route("/tournaments/<int:league_id>/matches/<int:start_time>", methods=["GET"])
+@bp.route("/tournaments/<int:league_id>/matches/<int:start_time>", methods=["GET"])
 def find_match_stats(league_id: int, start_time: int):
     """
     Finds stats for league match.
@@ -72,7 +77,7 @@ def find_match_stats(league_id: int, start_time: int):
         return make_response(jsonify(detailed_match), 200)
 
 
-@app.route("/profiles/<int:steam32_id>/stats", methods=["GET"])
+@bp.route("/profiles/<int:steam32_id>/stats", methods=["GET"])
 def find_profile_stas(steam32_id):
     """
     Finds stats for profile.
@@ -91,7 +96,7 @@ def find_profile_stas(steam32_id):
         return make_response(jsonify(profile_stats), 200)
 
 
-@app.route("/profiles/<int:steam32_id>/successful_heroes", methods=["GET"])
+@bp.route("/profiles/<int:steam32_id>/successful_heroes", methods=["GET"])
 def find_profile_successful_heroes(steam32_id):
     """
     Successful heroes.
@@ -115,7 +120,7 @@ def find_profile_successful_heroes(steam32_id):
         return make_response(jsonify(profile_general["successful_heroes"]), 200)
 
 
-@app.route("/profiles/<int:steam32_id>/card", methods=["GET"])
+@bp.route("/profiles/<int:steam32_id>/card", methods=["GET"])
 def find_profile_card(steam32_id):
     """
     Profile card.
@@ -131,3 +136,9 @@ def find_profile_card(steam32_id):
         return make_response(jsonify({"Error": str(e)}), 500)
     else:
         return make_response(jsonify(profile_card), 200)
+
+
+def create_app():
+    app = Flask("api")
+    app.register_blueprint(bp)
+    return app

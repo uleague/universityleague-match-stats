@@ -1,0 +1,241 @@
+{
+"request_id": 0,
+"results_remaining": 25,
+"series": [
+    {
+        "matches": [
+            {
+                "dire_team_complete": 0,
+                "dire_team_id": 7912704,
+                "dire_team_logo": 1000305831702422575,
+                "dire_team_logo_url": "https://steamusercontent-a.akamaihd.net/ugc/1000305831702422575/B279DCF20A9DEAA49C1D5C1B358C971508DB2729/",
+                "dire_team_name": "Ранхигс Москва",
+                "dire_team_tag": "RANHMSK",
+                "game_mode": 2,
+                "leagueid": 11776,
+                "lobby_type": 1,
+                "match_flags": 0,
+                "match_id": 5396792947,
+                "match_outcome": 3,
+                "negative_votes": 0,
+                "players": [
+                    {
+                        "account_id": 143817835,
+                        "active_plus_subscription": true,
+                        "hero_id": 64,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "4to takoe dobrot",
+                        "player_slot": 0
+                    },
+                    {
+                        "account_id": 334728173,
+                        "active_plus_subscription": false,
+                        "hero_id": 46,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "kapsnik",
+                        "player_slot": 1
+                    },
+                    {
+                        "account_id": 90891743,
+                        "active_plus_subscription": false,
+                        "hero_id": 1,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "Mu[RR]ZiK",
+                        "player_slot": 2
+                    },
+                    {
+                        "account_id": 912054671,
+                        "active_plus_subscription": false,
+                        "hero_id": 79,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "Sherli",
+                        "player_slot": 3
+                    },
+                    {
+                        "account_id": 400009989,
+                        "active_plus_subscription": true,
+                        "hero_id": 129,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "!КОТИК В АКВАЛАНГЕ!",
+                        "player_slot": 4
+                    },
+                    {
+                        "account_id": 241483346,
+                        "active_plus_subscription": false,
+                        "hero_id": 93,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "Juseark",
+                        "player_slot": 128
+                    },
+                    {
+                        "account_id": 123086641,
+                        "active_plus_subscription": true,
+                        "hero_id": 37,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "TEMPEST DOUBLE",
+                        "player_slot": 129
+                    },
+                    {
+                        "account_id": 48650948,
+                        "active_plus_subscription": false,
+                        "hero_id": 2,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "Jugger",
+                        "player_slot": 130
+                    },
+                    {
+                        "account_id": 449071511,
+                        "active_plus_subscription": false,
+                        "hero_id": 101,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "jaguarflow_",
+                        "player_slot": 131
+                    },
+                    {
+                        "account_id": 301736317,
+                        "active_plus_subscription": true,
+                        "hero_id": 74,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "Hamjak",
+                        "player_slot": 132
+                    }
+                ],
+                "positive_votes": 0,
+                "radiant_team_complete": 0,
+                "radiant_team_id": 7894396,
+                "radiant_team_logo": 1019446044006726350,
+                "radiant_team_logo_url": "https://steamusercontent-a.akamaihd.net/ugc/1019446044006726350/FE75930DF3CB44309C7A398DAF33F4DE2B85DE6B/",
+                "radiant_team_name": "opyat' na pari",
+                "radiant_team_tag": "ONP",
+                "series_id": 438628,
+                "series_type": 1,
+                "startTime": 1588612054
+            },
+            {
+                "dire_team_complete": 0,
+                "dire_team_id": 7894396,
+                "dire_team_logo": 1019446044006726350,
+                "dire_team_logo_url": "https://steamusercontent-a.akamaihd.net/ugc/1019446044006726350/FE75930DF3CB44309C7A398DAF33F4DE2B85DE6B/",
+                "dire_team_name": "opyat' na pari",
+                "dire_team_tag": "ONP",
+                "game_mode": 2,
+                "leagueid": 11776,
+                "lobby_type": 1,
+                "match_flags": 0,
+                "match_id": 5396960579,
+                "match_outcome": 2,
+                "negative_votes": 0,
+                "players": [
+                    {
+                        "account_id": 241483346,
+                        "active_plus_subscription": false,
+                        "hero_id": 42,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "Juseark",
+                        "player_slot": 0
+                    },
+                    {
+                        "account_id": 123086641,
+                        "active_plus_subscription": true,
+                        "hero_id": 64,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "TEMPEST DOUBLE",
+                        "player_slot": 1
+                    },
+                    {
+                        "account_id": 48650948,
+                        "active_plus_subscription": false,
+                        "hero_id": 51,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "Jugger",
+                        "player_slot": 2
+                    },
+                    {
+                        "account_id": 301736317,
+                        "active_plus_subscription": true,
+                        "hero_id": 36,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "Hamjak",
+                        "player_slot": 3
+                    },
+                    {
+                        "account_id": 449071511,
+                        "active_plus_subscription": false,
+                        "hero_id": 126,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "jaguarflow_",
+                        "player_slot": 4
+                    },
+                    {
+                        "account_id": 143817835,
+                        "active_plus_subscription": true,
+                        "hero_id": 37,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "4to takoe dobrot",
+                        "player_slot": 128
+                    },
+                    {
+                        "account_id": 90891743,
+                        "active_plus_subscription": false,
+                        "hero_id": 4,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "Mu[RR]ZiK",
+                        "player_slot": 129
+                    },
+                    {
+                        "account_id": 400009989,
+                        "active_plus_subscription": true,
+                        "hero_id": 96,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "!КОТИК В АКВАЛАНГЕ!",
+                        "player_slot": 130
+                    },
+                    {
+                        "account_id": 334728173,
+                        "active_plus_subscription": false,
+                        "hero_id": 52,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "kapsnik",
+                        "player_slot": 131
+                    },
+                    {
+                        "account_id": 912054671,
+                        "active_plus_subscription": false,
+                        "hero_id": 121,
+                        "leaver_status": 0,
+                        "mmr_type": 1,
+                        "player_name": "Sherli",
+                        "player_slot": 132
+                    }
+                ],
+                "positive_votes": 0,
+                "series_id": 438628,
+                "series_type": 1,
+                "startTime": 1588618115
+            }
+        ],
+        "series_id": 438628,
+        "series_type": 1
+    }
+],
+"total_results": 50
+}

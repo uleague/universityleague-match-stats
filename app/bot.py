@@ -13,8 +13,8 @@ from steam.utils.proto import proto_to_dict
 
 from dota2.client import Dota2Client
 
-from settings import SteamConfig
-from exceptions import BotError
+from .settings import SteamConfig
+from .exceptions import BotError
 
 import logging
 from rich.logging import RichHandler
@@ -82,7 +82,7 @@ class MatchStatsBot(object):
         self.steam = client = SteamClient()
         self.dota = dota = Dota2Client(client)
 
-        client.set_credential_location("./sentry")
+        client.set_credential_location("app/sentry")
 
         @client.on("error")
         def handle_error(result):

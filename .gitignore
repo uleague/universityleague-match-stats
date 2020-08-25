@@ -2,3 +2,6 @@ __pycache__
 sentry/
 .env
 venv/
+.pytest_cache
+.coverage
+.vscode/
