@@ -22,12 +22,12 @@ spec:
       affinity:
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: node.kubernetes.io/lifecycle
-                operator: In
-                values:
-                - spot
+          - nodeSelectorTerms:
+              - matchExpressions:
+                - key: node.kubernetes.io/lifecycle
+                  operator: In
+                  values:
+                  - spot
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
