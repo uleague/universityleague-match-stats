@@ -28,7 +28,6 @@ spec:
                 operator: In
                 values:
                 - spot
-            topologyKey: "node.kubernetes.io"
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
