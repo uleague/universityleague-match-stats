@@ -20,14 +20,14 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       affinity:
-        podAffinity:
+        nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-          - nodeSelectorTerms:
-              - matchExpressions:
-                - key: node.kubernetes.io/lifecycle
-                  operator: In
-                  values:
-                  - spot
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node.kubernetes.io/lifecycle
+                operator: In
+                values:
+                - spot
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
