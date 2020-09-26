@@ -72,5 +72,4 @@ class Tournament:
             for match in serie["matches"]:
                 if match["startTime"] == start_time:
                     return match
-                else:
-                    raise TournamentError("No match started at: {}".format(start_time))
+        raise TournamentError("No match started at: {}".format(start_time))
