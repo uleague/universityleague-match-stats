@@ -70,7 +70,7 @@ affinity:
       nodeSelectorTerms:
       - matchExpressions:
         - key: node.kubernetes.io/lifecycle
-          operator: In
+          operator: NotIn
           values:
           - spot
 
