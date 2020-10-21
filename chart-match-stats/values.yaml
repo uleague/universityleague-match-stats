@@ -64,7 +64,15 @@ nodeSelector: {}
 tolerations: []
 
 # affinity -- Kubernetes affinity resource.
-affinity: {}
+affinity: 
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: node.kubernetes.io/lifecycle
+          operator: NotIn
+          values:
+          - spot
 
 # env -- Environment variables for the application.
 env: []

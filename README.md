@@ -922,6 +922,3 @@ const rankTierToMedalName = (_rankTier) => {
 ```
 
 -------------------
-
-## API reference
-<https://www.notion.so/Match-stats-bot-305a3750d69f4c1d9a5f9ab67a60e963>
