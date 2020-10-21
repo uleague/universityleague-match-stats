@@ -121,7 +121,7 @@ def find_profile_successful_heroes(steam32_id):
         if profile_general and "successful_heroes" in profile_general:
             return make_response(jsonify(profile_general["successful_heroes"]), 200)
         else:
-            return make_response(jsonify({"Error": profile_general}), 500)
+            return make_response(jsonify([]), 500)
 
 
 @bp.route("/profiles/<int:steam32_id>/card", methods=["GET"])
