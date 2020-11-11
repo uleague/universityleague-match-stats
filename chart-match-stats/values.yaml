@@ -88,9 +88,8 @@ secrets: []
 # livenessProbe -- Customize the livenessProbe.
 livenessProbe:
   httpGet:
-    path: /tournaments/11987/matches/1605028929
+    path: /
     port: http
-  periodSeconds: 300
 
 # readinessProbe -- Customize the readiness probe.
 readinessProbe:
