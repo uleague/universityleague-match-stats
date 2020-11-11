@@ -40,7 +40,7 @@ def tournament_matches(league_id: int):
     Gets 25 last Series from tournament.
 
     :param league_id: int
-    :return: all Series of the tournament 
+    :return: all Series of the tournament
     :rtype: json
     TODO: Resolve how to get all Series.
     """
@@ -56,10 +56,10 @@ def tournament_matches(league_id: int):
 def find_match_stats(league_id: int, start_time: int):
     """
     Finds stats for league match.
-    
+
     :param start_time: int
     :param league_id: int
-    :return: stats for the game 
+    :return: stats for the game
     :rtype: json
     """
     try:
@@ -82,7 +82,7 @@ def find_profile_stas(steam32_id):
     """
     Finds stats for profile.
     player_stats
-    
+
     :param steam32_id: int
     :return: profile stats
     :rtype: json
@@ -100,7 +100,7 @@ def find_profile_stas(steam32_id):
 def find_profile_successful_heroes(steam32_id):
     """
     Successful heroes.
-    
+
     :param steam32_id: int
     :return: top 3 successful heroes
     :rtype: json
@@ -120,6 +120,8 @@ def find_profile_successful_heroes(steam32_id):
         LOG.info(profile_general)
         if profile_general and "successful_heroes" in profile_general:
             return make_response(jsonify(profile_general["successful_heroes"]), 200)
+        elif profile_general and "featured_heroes" in profile_general:
+            return make_response(jsonify(profile_general["featured_heroes"]), 200)
         else:
             return make_response(jsonify({"Error": profile_general}), 500)
 
@@ -128,7 +130,7 @@ def find_profile_successful_heroes(steam32_id):
 def find_profile_card(steam32_id):
     """
     Profile card.
-    
+
     :param steam32_id: int
     :return: profile card
     :rtype: json

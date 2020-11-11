@@ -9,11 +9,11 @@ services:
         volumes: 
             - ./app:/usr/src/app/app
         networks:
-            - ulnet_testing
+            - ulnet
         ports: 
             - 8080:8080
         entrypoint: ['python', '-m', 'app']
 
 networks:
-    ulnet_testing:
-        name: ul_testing_network
+    ulnet:
+        name: ul_network

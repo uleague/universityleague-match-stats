@@ -56,17 +56,17 @@ class MatchStatsBot(object):
             :Example:
 
             >>> q.put("name_of_callback", callback_result)
-    
+
     Methods:
     ----------
     __init__(self)
         Basically here the bot is launched and main events are registered.
-    
+
     Main events:
         - client.on('logged_on')
             Steam Client is set up. Now we launch dota client.
         - dota.on('get_tournament_matches')
-            Event wich is fired up by self.get_tournament_matches(). 
+            Event wich is fired up by self.get_tournament_matches().
             Which itself is fired by api.
 
 
@@ -131,7 +131,7 @@ class MatchStatsBot(object):
             """
             Fires after api calls `worker.get_tournament_matches()`
 
-            Puts result to the queue as a Tuple. 
+            Puts result to the queue as a Tuple.
             raises BotError if couldn't get tournament matches.
             """
             LOG.info("Caught a get_tournament_matches event")
@@ -160,7 +160,7 @@ class MatchStatsBot(object):
             """
             Fires after api calls `worker.get_detailed_match()`
 
-            Puts result to the queue as a Tuple. 
+            Puts result to the queue as a Tuple.
             raises BotError if couldn't get match.
             """
             LOG.info("Caught a get_detailed_match event")
@@ -187,7 +187,7 @@ class MatchStatsBot(object):
             """
             Fires after api calls `worker.get_profile_card()`
 
-            Puts result to the queue as a Tuple. 
+            Puts result to the queue as a Tuple.
             raises BotError if couldn't get profile.
             """
             LOG.info("Caught a get_profile_stats event")
@@ -213,7 +213,7 @@ class MatchStatsBot(object):
             """
             Fires after api calls `worker.get_profile_stats()`
 
-            Puts result to the queue as a Tuple. 
+            Puts result to the queue as a Tuple.
             raises BotError if couldn't get profile.
             """
             LOG.info("Caught a get_profile_stats event")
@@ -239,7 +239,7 @@ class MatchStatsBot(object):
             """
             Fires after api calls `worker.get_profile_general()`
 
-            Puts result to the queue as a Tuple. 
+            Puts result to the queue as a Tuple.
             raises BotError if couldn't get profile.
             """
             LOG.info("Caught a get_profile_general event")
@@ -305,7 +305,7 @@ class MatchStatsBot(object):
         Gets league matches.
 
         :param league_id: int
-        :return: matches 
+        :return: matches
         :rtype: Dict
         """
         # timeout variable can be omitted
@@ -327,7 +327,7 @@ class MatchStatsBot(object):
         Gets detailed match stats.
 
         :param match_id: int
-        :return: detailed match 
+        :return: detailed match
         :rtype: Dict
         """
         # timeout variable can be omitted
