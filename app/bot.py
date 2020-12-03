@@ -150,8 +150,7 @@ class MatchStatsBot(object):
                     # Put result with identificator to Queue
                     self.q.put(("tournament_matches", tournament_matches))
                 else:
-                    LOG.exception()
-                    raise BotError(
+                    LOG.warning(
                         "Could not find matches in tournament: {}".format(league_id)
                     )
 
@@ -257,8 +256,7 @@ class MatchStatsBot(object):
                     # Put result with identificator to Queue
                     self.q.put(("profile_general", profile_general))
                 else:
-                    LOG.exception()
-                    raise BotError("Could not find profile: {}".format(steam_id))
+                    LOG.warning("Could not find profile: {}".format(steam_id))
 
     def prompt_login(self):
         """
