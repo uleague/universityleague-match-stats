@@ -312,7 +312,6 @@ class MatchStatsBot(object):
         # Emiting event
         self.dota.emit("get_tournament_matches", league_id)
         while True:
-            time.sleep(0.25)  # short sleep here so this loop is not hogging CPU
             if time.time() > timeout:
                 raise BotError(
                     "Timeout. Could not wait for results from Dota for tournament matches"
@@ -333,7 +332,6 @@ class MatchStatsBot(object):
         # Emiting event
         self.dota.emit("get_detailed_match", match_id)
         while True:
-            time.sleep(0.25)  # short sleep here so this loop is not hogging CPU
             if time.time() > timeout:
                 raise BotError(
                     "Timeout. Could not wait for results from Dota for detailed match"
@@ -353,7 +351,6 @@ class MatchStatsBot(object):
         timeout = time.time() + 60 * 5  # [seconds]
         self.dota.emit("get_profile_card", steam_id)
         while True:
-            time.sleep(0.25)  # short sleep here so this loop is not hogging CPU
             if time.time() > timeout:
                 raise BotError(
                     "Timeout. Could not wait for results from Dota for profile card"
@@ -373,7 +370,6 @@ class MatchStatsBot(object):
         timeout = time.time() + 60 * 5  # [seconds]
         self.dota.emit("get_profile_stats", steam_id)
         while True:
-            time.sleep(0.25)  # short sleep here so this loop is not hogging CPU
             if time.time() > timeout:
                 raise BotError(
                     "Timeout. Could not wait for results from Dota for profile stats"
@@ -393,7 +389,6 @@ class MatchStatsBot(object):
         timeout = time.time() + 60 * 5  # [seconds]
         self.dota.emit("get_profile_general", steam_id)
         while True:
-            time.sleep(0.25)  # short sleep here so this loop is not hogging CPU
             if time.time() > timeout:
                 raise BotError(
                     "Timeout. Could not wait for results from Dota for profile general"
