@@ -14,6 +14,7 @@ import sentry_sdk
 
 sentry_sdk.init(os.getenv("SENTRY_DSN"), traces_sample_rate=0)
 
+
 def init():
     app = create_app()
     http_server = WSGIServer(("0.0.0.0", int(Config.PORT)), app)
