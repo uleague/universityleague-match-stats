@@ -20,22 +20,26 @@ class TestRoutes:
 
     def test_tournament_matches_success(self, client):
         with mock.patch.object(
-            worker,
+            worker.dota,
             "request_matches",
             return_value=TestResponses.tournament_matches_response,
         ) as m:
             client.get("/tournaments/{}/matches".format(TestResponses.league_id))
-            m.assert_called_once_with(TestResponses.league_id)
+            m.assert_called_once_with(
+                league_id=TestResponses.league_id, matches_requested=25
+            )
 
     @mock.patch.object(
-        worker,
-        "get_tournament_matches",
+        worker.dota,
+        "request_matches",
         return_value=TestResponses.tournament_matches_response,
     )
     @mock.patch.object(
-        worker, "get_detailed_match", return_value=TestResponses.detailed_match_response
+        worker.dota,
+        "request_match_details",
+        return_value=TestResponses.detailed_match_response,
     )
-    def test_find_matche_stats_success(
+    def test_find_match_stats_success(
         self, mock_detailed_match, mock_t_matches, client
     ):
         client.get(
@@ -43,19 +47,26 @@ class TestRoutes:
                 TestResponses.league_id, TestResponses.start_time
             )
         )
-        mock_t_matches.assert_called_once_with(TestResponses.league_id)
-        mock_detailed_match.assert_called_once()
+
+        mock_t_matches.assert_called_once_with(
+            league_id=TestResponses.league_id, matches_requested=25
+        )
+        mock_detailed_match.assert_called_once_with(
+            TestResponses.detailed_match_response["match"]["match_id"]
+        )
 
     @mock.patch.object(
-        worker, "get_profile_stats", return_value=TestResponses.profile_stats_response
+        worker.dota,
+        "request_player_stats",
+        return_value=TestResponses.profile_stats_response,
     )
     def test_find_profile_stats_success(self, mock_profile_stats, client):
         client.get("/profiles/{}/stats".format(TestResponses.steam32_id))
         mock_profile_stats.assert_called_once_with(TestResponses.steam32_id)
 
     @mock.patch.object(
-        worker,
-        "get_profile_general",
+        worker.dota,
+        "request_profile",
         return_value=TestResponses.successful_heroes_response,
     )
     def test_find_profile_successful_heroes_success(self, mock_profile_general, client):
@@ -63,8 +74,8 @@ class TestRoutes:
         mock_profile_general.assert_called_once_with(TestResponses.steam32_id)
 
     @mock.patch.object(
-        worker,
-        "get_profile_card",
+        worker.dota,
+        "request_profile_card",
         return_value=TestResponses.successful_heroes_response,
     )
     def test_find_profile_card_sucess(self, mock_profile_stats, client):

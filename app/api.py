@@ -16,7 +16,7 @@ from rich.logging import RichHandler
 
 FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 logging.basicConfig(
-    level="INFO", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()]
+    level="DEBUG", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()]
 )
 
 LOG = logging.getLogger(__name__)
@@ -96,8 +96,8 @@ def find_match_stats(league_id: int, start_time: int):
         match = t.get_match(start_time)
         match_id = match["match_id"]
         # Find detailed match info by match id
-        job = worker.dota.request_match_details(match_id)
-        detailed_match: Iterable = proto_to_dict(worker.dota.wait_msg(job, timeout=10))
+        job2 = worker.dota.request_match_details(match_id)
+        detailed_match: Iterable = proto_to_dict(worker.dota.wait_msg(job2, timeout=10))
     except Exception as e:
         return make_response(jsonify({"Error": str(e)}), 500)
     else:
