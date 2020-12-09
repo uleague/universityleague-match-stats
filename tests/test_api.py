@@ -21,7 +21,7 @@ class TestRoutes:
     def test_tournament_matches_success(self, client):
         with mock.patch.object(
             worker,
-            "get_tournament_matches",
+            "request_matches",
             return_value=TestResponses.tournament_matches_response,
         ) as m:
             client.get("/tournaments/{}/matches".format(TestResponses.league_id))

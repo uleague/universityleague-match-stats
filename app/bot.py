@@ -129,6 +129,7 @@ class MatchStatsBot(object):
         @dota.on("get_tournament_matches")
         def handle_get_tournament_matches(league_id) -> Tuple:
             """
+            !!!DEPRECATED!!!
             Fires after api calls `worker.get_tournament_matches()`
 
             Puts result to the queue as a Tuple.
@@ -157,6 +158,7 @@ class MatchStatsBot(object):
         @dota.on("get_detailed_match")
         def handle_get_detailed_match(match_id) -> Tuple:
             """
+            !!!DEPRECATED!!!
             Fires after api calls `worker.get_detailed_match()`
 
             Puts result to the queue as a Tuple.
@@ -184,6 +186,7 @@ class MatchStatsBot(object):
         @dota.on("get_profile_card")
         def handle_get_profile_card(steam_id: int) -> Tuple:
             """
+            !!!DEPRECATED!!!
             Fires after api calls `worker.get_profile_card()`
 
             Puts result to the queue as a Tuple.
@@ -210,6 +213,7 @@ class MatchStatsBot(object):
         @dota.on("get_profile_stats")
         def handle_get_profile_stats(steam_id: int) -> Tuple:
             """
+            !!!DEPRECATED!!!
             Fires after api calls `worker.get_profile_stats()`
 
             Puts result to the queue as a Tuple.
@@ -236,6 +240,7 @@ class MatchStatsBot(object):
         @dota.on("get_profile_general")
         def handle_get_profile_general(steam_id: int) -> Tuple:
             """
+            !!!DEPRECATED!!!
             Fires after api calls `worker.get_profile_general()`
 
             Puts result to the queue as a Tuple.
@@ -276,6 +281,7 @@ class MatchStatsBot(object):
 
     def get_result_from_queue(self, event) -> Dict:
         """
+        !!!DEPRECATED!!!
         Get result from queue by event name
         :return: converted Proto to dict
         :rtype: Dict
@@ -300,6 +306,7 @@ class MatchStatsBot(object):
 
     def get_tournament_matches(self, league_id: int) -> Dict:
         """
+        !!!DEPRECATED!!!
         Gets league matches.
 
         :param league_id: int
@@ -321,6 +328,7 @@ class MatchStatsBot(object):
 
     def get_detailed_match(self, match_id: int) -> Dict:
         """
+        !!!DEPRECATED!!!
         Gets detailed match stats.
 
         :param match_id: int
@@ -341,6 +349,7 @@ class MatchStatsBot(object):
 
     def get_profile_card(self, steam_id: int) -> Dict:
         """
+        !!!DEPRECATED!!!
         Find profile card by steam id. Mainly for medal check.
 
         :param steam_id: int
@@ -360,6 +369,7 @@ class MatchStatsBot(object):
 
     def get_profile_stats(self, steam_id: int) -> Dict:
         """
+        !!!DEPRECATED!!!
         Find profile card by steam id. Mainly for in game stats (lasthits, rampages).
 
         :param steam_id: int
@@ -379,6 +389,7 @@ class MatchStatsBot(object):
 
     def get_profile_general(self, steam_id: int) -> Dict:
         """
+        !!!DEPRECATED!!!
         Find general profile info by steam id. Mainly for best heroes info.
 
         :param steam_id: int
