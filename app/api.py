@@ -7,6 +7,7 @@ from dacite import from_dict
 from flask import Flask, request, abort, jsonify, make_response, Blueprint
 from typing import Dict, Iterable
 from steam.utils.proto import proto_to_dict
+from steam.steamid import SteamID
 
 from . import steam_bot
 from .types import Tournament
@@ -64,6 +65,33 @@ def tournament_matches(league_id: int):
             LOG.warning("Couldn't find tournament matches")
             return make_response(jsonify({"Error": tournament_matches}, 404))
 
+@bp.route("/matches/<int:match_id>", methods=["GET"])
+def get_match(match_id: int):
+    """
+    Get minimal info for match.
+
+    :param match_id: int
+    :return: all data for the public match
+    :rtype: json
+    """
+    try:
+        LOG.info(
+            "Recieved get_match request for {}".format(match_id)
+        )
+        job = worker.dota.request_matches_minimal([match_id])
+        match: Iterable = proto_to_dict(
+            worker.dota.wait_msg(job, timeout=10)
+        )
+    except Exception as e:
+        return make_response(jsonify({"Error": str(e)}), 500)
+    else:
+        if match:
+            LOG.info("Found match. Responding")
+            return make_response(jsonify(match), 200)
+        else:
+            LOG.warning("Couldn't find match")
+            return make_response(jsonify({"Error": match}, 404))
+
 
 @bp.route("/tournaments/<int:league_id>/matches/<int:start_time>", methods=["GET"])
 def find_match_stats(league_id: int, start_time: int):
@@ -109,19 +137,20 @@ def find_match_stats(league_id: int, start_time: int):
             return make_response(jsonify({"Error": detailed_match}, 404))
 
 
-@bp.route("/profiles/<int:steam32_id>/stats", methods=["GET"])
-def find_profile_stas(steam32_id):
+@bp.route("/profiles/<int:steam64_id>/stats", methods=["GET"])
+def find_profile_stas(steam64_id):
     """
     Finds stats for profile.
     player_stats
 
-    :param steam32_id: int
+    :param steam64_id: int
     :return: profile stats
     :rtype: json
     """
     try:
         # Try to fetch profile in Dota with our worker
-        LOG.info("Recieved stats request for {} profile".format(steam32_id))
+        LOG.info("Recieved stats request for {} profile".format(steam64_id))
+        steam32_id = SteamID(steam64_id).as_32
         job = worker.dota.request_player_stats(steam32_id)
         profile_stats: Iterable = proto_to_dict(worker.dota.wait_msg(job, timeout=10))
     except Exception as e:
@@ -133,6 +162,32 @@ def find_profile_stas(steam32_id):
         else:
             LOG.warning("Couldn't find profile stats")
             return make_response(jsonify({"Error": profile_stats}, 404))
+
+@bp.route("/profiles/<int:steam64_id>/recent_matches", methods=["GET"])
+def find_profile_info(steam64_id):
+    """
+    Finds stats for profile.
+    player_stats
+
+    :param steam64_id: int
+    :return: profile stats
+    :rtype: json
+    """
+    try:
+        # Try to fetch profile in Dota with our worker
+        LOG.info("Recieved info request for {} profile".format(steam64_id))
+        steam32_id = SteamID(steam64_id).as_32
+        job = worker.dota.request_profile(steam32_id)
+        profile: Iterable = proto_to_dict(worker.dota.wait_msg(job, timeout=10))
+    except Exception as e:
+        return make_response(jsonify({"Error": str(e)}), 500)
+    else:
+        if profile:
+            LOG.info("Found profile stats. Responding")
+            return make_response(jsonify(profile["recent_matches"]), 200)
+        else:
+            LOG.warning("Couldn't find profile stats")
+            return make_response(jsonify({"Error": steam64_id}, 404))
 
 
 @bp.route("/profiles/<int:steam32_id>/successful_heroes", methods=["GET"])
@@ -171,18 +226,19 @@ def find_profile_successful_heroes(steam32_id):
             return make_response(jsonify([]), 404)
 
 
-@bp.route("/profiles/<int:steam32_id>/card", methods=["GET"])
-def find_profile_card(steam32_id):
+@bp.route("/profiles/<int:steam64_id>/card", methods=["GET"])
+def find_profile_card(steam64_id):
     """
     Profile card.
 
-    :param steam32_id: int
+    :param steam64_id: int
     :return: profile card
     :rtype: json
     """
     try:
-        LOG.info("Recieved card request for {} profile".format(steam32_id))
+        LOG.info("Recieved card request for {} profile".format(steam64_id))
         # Try to fetch profile in Dota with our worker
+        steam32_id = SteamID(steam64_id).as_32
         job = worker.dota.request_profile_card(steam32_id)
         profile_card: Iterable = proto_to_dict(worker.dota.wait_msg(job, timeout=10))
     except Exception as e:

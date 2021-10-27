@@ -9,11 +9,11 @@ services:
         volumes: 
             - ./app:/usr/src/app/app
         networks:
-            - ulnet
+            - skillreview
         ports: 
-            - 8080:8080
+            - 8081:8081
         entrypoint: ['python', '-m', 'app']
 
 networks:
-    ulnet:
-        name: ul_network
+    skillreview:
+        name: backend_skillreview
