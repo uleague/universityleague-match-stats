@@ -79,18 +79,18 @@ def get_match(match_id: int):
             "Recieved get_match request for {}".format(match_id)
         )
         job = worker.dota.request_matches_minimal([match_id])
-        match: Iterable = proto_to_dict(
+        matches: Iterable = proto_to_dict(
             worker.dota.wait_msg(job, timeout=10)
         )
     except Exception as e:
         return make_response(jsonify({"Error": str(e)}), 500)
     else:
-        if match:
+        if matches:
             LOG.info("Found match. Responding")
-            return make_response(jsonify(match), 200)
+            return make_response(jsonify(matches["matches"][0]), 200)
         else:
             LOG.warning("Couldn't find match")
-            return make_response(jsonify({"Error": match}, 404))
+            return make_response(jsonify({"Error": match_id}, 404))
 
 
 @bp.route("/tournaments/<int:league_id>/matches/<int:start_time>", methods=["GET"])
