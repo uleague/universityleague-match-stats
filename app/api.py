@@ -2,10 +2,9 @@
 This module contains flask app and its routes.
 """
 
-from getpass import getpass
 from dacite import from_dict
-from flask import Flask, request, abort, jsonify, make_response, Blueprint
-from typing import Dict, Iterable
+from flask import Flask, jsonify, make_response, Blueprint
+from typing import Iterable
 from steam.utils.proto import proto_to_dict
 from steam.steamid import SteamID
 
