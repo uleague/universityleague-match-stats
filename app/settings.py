@@ -21,4 +21,4 @@ class Config:
     Class for General config
     """
 
-    PORT = os.getenv("PORT", 8080)
+    PORT = os.getenv("PORT", 8081)
